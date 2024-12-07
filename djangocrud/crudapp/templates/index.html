@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Django CRUD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        *(
+            font-family: "Poppins", sans-serif;
+        )
+    </style>
+</head>
+  <body>
+    <div class="container mt-5 p-5 border rounded">
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success text-center mb-3">
+            {{message}}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="" data-bs-toggle="modal" data-bs-target="#addCarModal" class="btn btn-primary px-4 py-2 btn-sm">Add new car</a>
+        <div>
+          <form action="" method="post" class="d-flex">
+            {% csrf_token %}
+            <input type="search" value="{{query}}" name="searchquery" class="form-control" placeholder="Search...">
+            <button class="btn btn-success mx-2" name="search">Search</button>
+          </form>
+        </div>
+      </div>
+
+
+      <table class="table mt-3 table-bordered">
+        <thead>
+          <tr style="text-align:center;">
+            <th scope="col">ID</th>
+            <th scope="col">Car Name</th>
+            <th scope="col">Car Brand</th>
+            <th scope="col">Car Model</th>
+            <th scope="col">Car Price</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for car in cars %}
+          <tr >
+            <th style="text-align:center;">{{car.id}}</th>
+            <td>{{car.name}}</td>
+            <td>{{car.brand}}</td>
+            <td>{{car.model}}</td>
+            <td>{{car.price}}</td>
+            <td style="text-align:center;">
+              <a href="" data-bs-toggle="modal" data-bs-target="#updateCarModal_{{car.id}}" class="btn btn-success btn-sm"><i class="fa-sharp fa-solid fa-pen-to-square"></i></a>
+              <a href="" data-bs-toggle="modal" data-bs-target="#deleteCarModal_{{car.id}}" class="btn btn-danger btn-sm"><i class="fa-sharp fa-solid fa-trash"></i></a>
+            </td>
+          </tr>
+          <!-- update car modal -->
+          <div class="modal fade" id="updateCarModal_{{car.id}}" tabindex="-1" aria-labelledby="updateCarModalLabel_{{car.id}}" aria-hidden="true">
+            <div class="modal-dialog">
+              <form acion="" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateCarModalLabel_{{car.id}}">Add new car</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" name="id" value="{{car.id}}">
+                    <div class="">
+                      <label for="name">Car Name</label>
+                      <input type="text" name="name" class="form-control" value="{{car.name}}" id="name" required>
+                    </div>
+                    <br>
+                    <div class="">
+                      <label for="brand">Car Brand</label>
+                      <input type="text" name="brand" class="form-control" value="{{car.brand}}" id="brand" required>
+                    </div>
+                    <br>
+                    <div class="">
+                      <label for="model">Car Model</label>
+                      <input type="text" name="model" class="form-control" value="{{car.model}}" id="model" required>
+                    </div>
+                    <br>
+                    <div class="">
+                      <label for="price">Car Price</label>
+                      <input type="number" name="price" class="form-control" value="{{car.price}}" id="price" required>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="update">Update car</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Delete Car Modal -->
+          <div class="modal fade" id="deleteCarModal_{{car.id}}" tabindex="-1" aria-labelledby="deleteCarModalLabel_{{car.id}}" aria-hidden="true">
+            <div class="modal-dialog">
+              <form acion="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{car.id}}">
+                <div class="modal-content"> 
+                  <div class="modal-body">
+                      <p>Are you sure? you want to delete</p>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger" name="delete">Delete Car</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="addCarModal" tabindex="-1" aria-labelledby="addCarModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form acion="" method="post">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addCarModalLabel">Add new car</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="">
+                <label for="name">Car Name</label>
+                <input type="text" name="name" class="form-control" id="name" required>
+              </div>
+              <br>
+              <div class="">
+                <label for="brand">Car Brand</label>
+                <input type="text" name="brand" class="form-control" id="brand" required>
+              </div>
+              <br>
+              <div class="">
+                <label for="model">Car Model</label>
+                <input type="text" name="model" class="form-control" id="model" required>
+              </div>
+              <br>
+              <div class="">
+                <label for="price">Car Price</label>
+                <input type="number" name="price" class="form-control" id="price" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" name="add">Add new car</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
